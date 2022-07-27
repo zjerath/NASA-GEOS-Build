@@ -1,0 +1,22 @@
+#accessing ubuntu openmpi image
+FROM ubuntu-openmpi:4.1.2
+
+MAINTAINER zain jerath <zainjerath@gmail.com>
+
+#from mathomp4
+RUN git clone --quiet -b v6.3.1 -j 6 --recurse-submodules https://github.com/GEOS-ESM/ESMA-Baselibs.git /baselibs/6.3.1/ESMA-Baselibs && \
+    \cd /baselibs/6.3.1/ESMA-Baselibs && \
+    make -j6 install ESMF_COMM=openmpi ESMF_PYTHON=/usr/bin/python3 BUILD=ESSENTIALS prefix=/baselibs/6.3.1/gcc_11.2.0-openmpi_4.1.2/Linux 2>&1 > log.build && \
+    make install ESMF_COMM=openmpi ESMF_PYTHON=/usr/bin/python3 ALLDIRS=nccmp prefix=/baselibs/6.3.1/gcc_11.2.0-openmpi_4.1.2/Linux 2>&1 > log.nccmp.build && \
+    make verify ESMF_COMM=openmpi && \
+    mv log.* /baselibs/6.3.1 && \
+    find /baselibs/6.3.1/ESMA-Baselibs -mindepth 1 -maxdepth 1 -type d -not -name esmf -exec rm -rf '{}' \; && \
+    cd /
+
+ENV BASEDIR /baselibs/6.3.1/gcc_11.2.0-openmpi_4.1.2
+ENV PATH ${BASEDIR}/Linux/bin:${PATH}
+
+#add script for testing ESMF in-place
+#COPY bash-for-docker/esmf-test-Dockerfile.baselibs.bash /opt
+
+#build command: docker build -f Dockerfile.baselibs -t ubuntu-baselibs:6.3.1 .

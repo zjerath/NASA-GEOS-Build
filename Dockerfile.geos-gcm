@@ -1,0 +1,17 @@
+#accessing geos-env image
+FROM ubuntu-geos-env:6.3.1
+
+MAINTAINER zain jerath <zainjerath@gmail.com>
+
+#from mathomp4
+RUN git clone -b v10.22.3 https://github.com/GEOS-ESM/GEOSgcm.git /GEOSgcm-src && \
+    cd /GEOSgcm-src && \
+    mepo clone && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/GEOSgcm/install -DBASEDIR=$BASEDIR/Linux -DUSE_F2PY=OFF -DCMAKE_Fortran_COMPILER=$FC -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX && \
+    make -j4 install/strip 2>&1 > /gcm_build.log && \
+    cd / && \
+    rm -rf /GEOSgcm-src
+
+#build command: docker build -f Dockerfile.geos-gcm -t ubuntu-geos-gcm:10.22.3 .
