@@ -1,0 +1,10 @@
+Bootstrap: library
+From: zjerath/gmao/baselibs:7.5.0
+
+%environment
+  export PATH=/mepo:/cmake/bin:$PATH
+
+%post
+  cd / && \
+  git clone https://github.com/GEOS-ESM/mepo.git && \
+  cd mepo

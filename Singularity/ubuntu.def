@@ -1,0 +1,58 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%post
+  export DEBIAN_FRONTEND="noninteractive"
+  export DEBCONF_NONINTERACTIVE_SEEN=true
+  export TZ="America/New_York"
+  apt-get update && \
+  apt-get install -y \
+    autoconf \
+    automake \
+    bash \
+    bc \
+    bison \
+    build-essential \
+    byacc \
+    cmake \
+    curl \
+    file \
+    flex \
+    git \
+    ksh \
+    libblas-dev \
+    libexpat1-dev \
+    liblapack-dev \
+    libssl-dev \
+    libtool \
+    manpages-dev \
+    python \
+    python-numpy \
+    python3 \
+    python3-yaml \
+    python3-distutils \
+    python3-numpy \
+    rsync \
+    ssh \
+    tcsh \
+    tree \
+    wget && \
+  apt-get clean autoclean && \
+  apt-get autoremove -y && \
+  rm -rf /var/lib/apt/lists/* && \
+  curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip2.py && \
+  python2 get-pip2.py && \
+  pip2 install pandas && \
+  curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py && \
+  python3 get-pip.py && \
+  pip3 install nose && \
+  mkdir /src-cmake && cd /src-cmake && \
+  wget https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0.tar.gz && \
+  tar xzf cmake-3.24.0.tar.gz && \
+  cd cmake-3.24.0 && \
+  mkdir build && cd build && \
+  cmake .. -DCMAKE_INSTALL_PREFIX=/cmake && \
+  make -j8 && \
+  make install && \
+  cd / && \
+  rm -rf /src-cmake

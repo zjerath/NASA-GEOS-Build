@@ -1,0 +1,17 @@
+Bootstrap: library
+From: zjerath/gmao/intel:21.3.0
+
+%environment
+export BASEDIR=/baselibs/v7.5.0/intel_2021.3.0-intelmpi_2021.3.0
+export PATH=${BASEDIR}/Linux/bin:${PATH}
+
+%post
+  git clone -b v7.5.0 -j 8 --recurse-submodules https://github.com/GEOS-ESM/ESMA-Baselibs.git /baselibs/v7.5.0/ESMA-Baselibs && \
+  \cd /baselibs/v7.5.0/ESMA-Baselibs && \
+  git submodule status && \
+  make -j8 install ESMF_COMM=intelmpi ESMF_PYTHON=/usr/bin/python3 BUILD=ESSENTIALS prefix=/baselibs/v7.5.0/intel_2021.3.0-intelmpi_2021.3.0/Linux 2>&1 |tee log.build && \
+  make install ESMF_COMM=intelmpi ESMF_PYTHON=/usr/bin/python3 ALLDIRS=nccmp prefix=/baselibs/v7.5.0/intel_2021.3.0-intelmpi_2021.3.0/Linux 2>&1 |tee log.nccmp.build && \
+  make verify ESMF_COMM=intelmpi && \
+  mv log.* /baselibs/v7.5.0 && \
+  find /baselibs/v7.5.0/ESMA-Baselibs -mindepth 1 -maxdepth 1 -type d -not -name esmf -exec rm -rf '{}' \; && \
+  cd /

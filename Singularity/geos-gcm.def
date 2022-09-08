@@ -1,0 +1,13 @@
+Bootstrap: oras
+From: gitlab.nccs.nasa.gov:5050/zjerath/geos-env/geos-env-geos-env:latest
+
+%post
+  git clone -b v10.22.3 https://github.com/GEOS-ESM/GEOSgcm.git /GEOSgcm-src && \
+  cd /GEOSgcm-src && \
+  mepo clone && \
+  mkdir build && \
+  cd build && \
+  cmake .. -DCMAKE_INSTALL_PREFIX=/GEOSgcm/install -DBASEDIR=$BASEDIR/Linux -DUSE_F2PY=OFF -DCMAKE_Fortran_COMPILER=$FC -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX && \
+  make -j4 install/strip && \
+  cd / && \
+  rm -rf /GEOSgcm-src
