@@ -3,13 +3,13 @@ Containerization project for the GMAO(Global Modeling and Assimilation Office) a
 Included are definition files for building GEOSfvdycore and GEOSgcm in both Docker and Singularity
 
 # Docker
-Docker images built using ubuntu, gcc, and openmpi
+Docker images built using ubuntu, gcc, and openmpi <br />
 Images can be pulled from zjerath at hub.docker.com
 
 # Singularity
-Singularity images build with ubuntu and intel
+Singularity images build with ubuntu and intel <br />
 Images can be pulled from zjerath using Bootstrap: library
 
 # Additional
-OS, compiler, and library versions used can be viewed in versions.sh
+OS, compiler, and library versions used can be viewed in versions.sh <br />
 For additional or updated info email matthew.thompson@nasa.gov
