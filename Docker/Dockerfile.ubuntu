@@ -1,0 +1,40 @@
+#get base image
+FROM ubuntu
+
+#maintainer allows for easy contact
+MAINTAINER zain jerath <zainjerath@gmail.com>
+
+# Needed so tzdata isn't interactive (installed by cmake)
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && \
+    apt-get install -y \
+      autoconf \
+      bison \
+      build-essential \
+      byacc \
+      ca-certificates \
+      cmake \
+      curl \
+      flex \
+      git \
+      gnupg \
+      ksh \
+      libexpat1-dev \
+      liblapack-dev \
+      libssl-dev \
+      m4 \
+      pkg-config \
+      python-is-python3 \
+      python3 \
+      python3-yaml \
+      python3-distutils \
+      python3-numpy \
+      tcsh \
+      wget \
+      ssh && \
+      apt-get clean autoclean && \
+      apt-get autoremove -y && \
+      rm -rf /var/lib/apt/lists/*
+
+#build command: docker build -f Dockerfile.ubuntu -t ubuntu-base:22.04 .

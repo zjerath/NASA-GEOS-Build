@@ -1,0 +1,33 @@
+#accessing geos-bcs image
+FROM gmao/geos-bcs:v10.22.3 AS bcsimage
+
+#accessing geos-gcm image
+FROM ubuntu-geos-gcm:10.22.3
+
+MAINTAINER zain jerath <zainjerath@gmail.com>
+
+#copy from image to image
+COPY --from=bcsimage /TinyBCs-GitV10 /TinyBCs-GitV10
+
+ENV OMPI_ALLOW_RUN_AS_ROOT 1
+ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM 1
+ENV OMPI_MCA_rmaps_base_oversubscribe 1
+ENV OMPI_MCA_btl_vader_single_copy_mechanism none
+
+RUN apt-get update && \
+    apt-get install -y \
+      bc \
+      colordiff \
+      file && \
+    apt-get clean autoclean && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    cd /GEOSgcm/install/bin && \
+    /TinyBCs-GitV10/scripts/create_expt.py test-c12 --expdir /experiments --horz c12 --vert 72 && \
+    cd /experiments/test-c12 && \
+    #can add nocheck after noext for regular run command
+    /TinyBCs-GitV10/scripts/makeoneday.bash 3hr nxy 1 6 noext && \
+    ./gcm_run.j |& tee gcm_run.log
+
+#build command: docker build -f Dockerfile.geos-gcm-setup -t ubuntu-geos-gcm-setup:1.0.0 .
+#run command: docker run -it --rm --shm-size=500M imageid
